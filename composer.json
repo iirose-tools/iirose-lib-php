@@ -1,0 +1,23 @@
+{
+    "name": "iirose-tools/iirose-lib-php",
+    "description": "A communication library for iirose, written in PHP",
+    "type": "library",
+    "require": {
+        "php": "~5.4 || ~7.0",
+        "ext-zlib": "~5.4 || ~7.0",
+        "ext-json": "~5.4 || ~7.0"
+    },
+    "require-dev": {
+        "php": "~7.0",
+        "ext-zlib": "~7.0",
+        "ext-json": "~7.0"
+    },
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name": "ishland",
+            "email": "ishlandmc@yeah.net"
+        }
+    ],
+    "minimum-stability": "stable"
+}
