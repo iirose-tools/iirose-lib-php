@@ -4,17 +4,31 @@ namespace iiroseLib;
 class IIRose_Packet
 {
 
+    /**
+     * Parse server packet and return raw array
+     *
+     * @return array boolean
+     */
     public function parseServerPacketArr ($packet)
     {
         $inflated = self::inflatePacket($packet);
+        if (! $inflated)
+            return false;
         $splited = self::splitPacket($inflated);
 
         return $splited;
     }
 
+    /**
+     * Parse server packet and return parsed array
+     *
+     * @return array boolean
+     */
     public function parseServerPacket ($packet)
     {
         $inflated = self::inflatePacket($packet);
+        if (! $inflated)
+            return false;
         $splited = self::splitPacket($inflated);
         $returnval = '';
 
@@ -25,25 +39,40 @@ class IIRose_Packet
         }
 
         if (! $returnval)
-            $returnval = "nothing\n";
+            $returnval = array(
+                    "type" => "nothing"
+            );
 
         return $returnval;
     }
 
     protected function publicMessage ($message)
     {
+        // Got a public chat packet
         if (count($message) == 11) {
-            return self::publicChatMessage($message);
+            return array(
+                    "type" => "publicChat",
+                    "data" => self::publicChatMessage($message)
+            );
+            // Got a public system message packet
         } elseif (count($message) == 12) {
-            return self::publicSystemMessage($message);
+            return array(
+                    "type" => "publicSystem",
+                    "data" => self::publicSystemMessage($message)
+            );
         }
     }
 
     protected function publicChatMessage ($message)
     {
-        return '[' . date('Y-m-d H:i:s', $message[0]) . '] ' .
-                html_entity_decode($message[2]) . ' said: ' .
-                html_entity_decode($message[3]) . "\n";
+        $timestamp = $message[0];
+        $user = $message[2];
+        $msg = $message[3];
+        return array(
+                $timestamp,
+                $user,
+                $msg
+        );
     }
 
     protected function publicSystemMessage ($message)
@@ -60,6 +89,7 @@ class IIRose_Packet
 
     protected function gzBody ($gzData)
     {
+        // gzip packet header detection
         if (substr($gzData, 0, 3) == "\x1f\x8b\x08") {
             $i = 10;
             $flg = ord(substr($gzData, 3, 1));
@@ -80,6 +110,7 @@ class IIRose_Packet
             }
 
             return gzinflate(substr($gzData, $i, - 8));
+            // Bad packet
         } else {
             return false;
         }
