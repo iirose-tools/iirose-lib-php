@@ -7,13 +7,16 @@ class IIRose_Packet
     /**
      * Parse server packet and return raw array
      *
-     * @return array boolean
+     * @return array
+     *
+     * @param
+     *            string
      */
     public function parseServerPacketArr ($packet)
     {
         $inflated = self::inflatePacket($packet);
         if (! $inflated)
-            return false;
+            return array();
         $splited = self::splitPacket($inflated);
 
         return $splited;
@@ -22,26 +25,26 @@ class IIRose_Packet
     /**
      * Parse server packet and return parsed array
      *
-     * @return array boolean
+     * @return array
+     * @param
+     *            string
      */
     public function parseServerPacket ($packet)
     {
         $inflated = self::inflatePacket($packet);
         if (! $inflated)
-            return false;
+            return array();
         $splited = self::splitPacket($inflated);
-        $returnval = '';
+        $returnval = array();
 
         foreach ($splited as $splitedEach) {
             if (preg_match('/\\d+/', substr($splitedEach[0], 0, 1))) {
-                $returnval .= self::publicMessage($splitedEach);
+                $returnval[] = self::publicMessage($splitedEach);
             }
         }
 
-        if (! $returnval)
-            $returnval = array(
-                    "type" => "nothing"
-            );
+        if (! count($returnval))
+            $returnval = array();
 
         return $returnval;
     }
