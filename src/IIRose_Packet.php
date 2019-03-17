@@ -68,9 +68,9 @@ class IIRose_Packet
 
     protected function publicChatMessage ($message)
     {
-        $timestamp = $message[0];
-        $user = $message[2];
-        $msg = $message[3];
+        $timestamp = intval($message[0]);
+        $user = html_entity_decode($message[2]);
+        $msg = html_entity_decode($message[3]);
         return array(
                 $timestamp,
                 $user,
@@ -79,7 +79,24 @@ class IIRose_Packet
     }
 
     protected function publicSystemMessage ($message)
-    {}
+    {
+        $timestamp = intval($message[0]);
+        $user = html_entity_decode($message[2]);
+        $msg = substr(html_entity_decode($message[3]), 1);
+        $decodedmsg = '';
+        if ($msg[0] == '1') {
+            $decodedmsg = 'joined';
+        } elseif ($msg[0] == '2') {
+            $decodedmsg = 'moved to ' . substr($msg, 2);
+        } elseif ($msg[0] == '3') {
+            $decodedmsg = 'left';
+        }
+        return array(
+                $timestamp,
+                $user,
+                $decodedmsg
+        );
+    }
 
     protected function inflatePacket ($packet)
     {
