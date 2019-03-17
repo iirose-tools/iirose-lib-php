@@ -44,7 +44,7 @@ plugins:
   phpcodesniffer:
     enabled: true
     config:
-      standard: "PSR4"
+      standard: "Zend"
   phpmd:
     enabled: true
     checks:
