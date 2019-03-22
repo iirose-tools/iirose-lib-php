@@ -31,14 +31,13 @@ class IIRose_Packet
      */
     public function parseServerPacket ($packet)
     {
-        $inflated = self::inflatePacket($packet);
-        if (! $inflated)
+        $splited = self::parseServerPacketArr($packet);
+        if (! count($splited))
             return array();
-        $splited = self::splitPacket($inflated);
         $returnval = array();
 
         foreach ($splited as $splitedEach) {
-            if (preg_match('/\\d+/', substr($splitedEach[0], 0, 1))) {
+            if (preg_match('/\\d+/', $splitedEach[0][1])) {
                 $returnval[] = self::publicMessage($splitedEach);
             }
         }
