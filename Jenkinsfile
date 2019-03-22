@@ -5,7 +5,7 @@ pipeline {
         stage('Test') {
             steps {
                 sh 'composer dump-autoload'
-                sh './vendor/bin/phpunit'
+                sh 'phpunit'
                 
             }
         }
