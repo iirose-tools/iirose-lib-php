@@ -37,7 +37,7 @@ class IIRose_Packet
         $returnval = array();
 
         foreach ($splited as $splitedEach) {
-            if (preg_match('/\\d+/', $splitedEach[0][1])) {
+            if (preg_match('/\\d+/', substr($splitedEach[0], 0, 1))) {
                 $returnval[] = self::publicMessage($splitedEach);
             }
         }
